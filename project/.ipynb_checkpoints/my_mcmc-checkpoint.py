@@ -129,7 +129,18 @@ def gaussian_2d_ind(t, x):
     return g
 
 
-def priors(mins, maxes, params):   
+def priors(mins, maxes, params):  
+    """
+    Computes the (flat) prior probability given user-inputted bounds on each parameter. 
+    Inputs:
+    mins: a list of minimum values for each parameter, in the order
+    they will be passed in to the MCMC function as an array
+    maxes: list of maximum values, in order
+    params: the list of parameter values to check
+    Output:
+    0 if any of the parameters are out of the specified range
+    1 if not
+    """
     for i in range(len(mins)):
         if (params[i] < mins[i]) | (params[i] > maxes[i]):
             return 0  
@@ -148,7 +159,7 @@ def autocorr(xchain, lag, nparams):
 
 def process_img(img_star):
     """
-    Scales the values in the image and gets the coordinate values
+    Scales the values in the image to make setting priors simpler.
     """
     img2 = img_star/img_star.max()
     img3 = img2/img2.sum(axis=1).sum()
@@ -156,7 +167,7 @@ def process_img(img_star):
 
 def get_coords(window_size):
     """
-    Returns coordinate pairs for a given window size
+    Returns coordinate pairs for a given window size.
     """
     y_vals, x_vals = np.mgrid[:2*window_size, :2*window_size]
     npts = len(x_vals)
@@ -169,11 +180,17 @@ def get_coords(window_size):
 
 
 def trigproduct(t, x):
+    """
+    Example function to demonstrate use on another 2D function.
+    """
     a,b = t
     phi_1, phi_2 = x
     return np.sin(a + phi_1)*np.cos(b + phi_2)
 
 def trigproduct_v2(t, x):
+    """
+    Same as above, except t has dimension (npts, npts, 2) instead of (2)
+    """
     a = t[:,:,0]
     b = t[:,:,1]
     phi_1 = x[0]
@@ -184,7 +201,8 @@ def trigproduct_v2(t, x):
 def gaussian_2d_general(t, x):
     """
     More general form of the 2d gaussian where X and Y are not independent, 
-    with an additional parameter theta.
+    with an additional parameter theta to describe the angle of the elliptical
+    shape.
     """
     #define the 6 parameters
     sig_x = x[2]
@@ -203,7 +221,7 @@ def gaussian_2d_general(t, x):
 
 def gaussian_2d(t, x):
     """
-    Function same as above but for generating data.
+    Function same as above but for generating data (t is 2D).
     """
     #define the 6 parameters
     sig_x = x[2]
