@@ -1,2 +1,1 @@
-# 4470project
-Project for ASTR 4470
+# ASTR 4470 Final Project
